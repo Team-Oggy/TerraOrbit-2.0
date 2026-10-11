@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      window.addEventListener('error', function(e) {
+        fetch('http://localhost:8000/log_error', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({message: e.message, source: e.filename, lineno: e.lineno, colno: e.colno, error: e.error ? e.error.stack : null})
+        });
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        fetch('http://localhost:8000/log_error', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({message: e.reason ? e.reason.message : 'Unhandled promise rejection', stack: e.reason ? e.reason.stack : null})
+        });
+      });
+    </script>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TerraOrbit Dashboard</title>
+        <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

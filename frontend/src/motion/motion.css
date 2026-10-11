@@ -1,0 +1,359 @@
+/* src/motion/motion.css */
+html:not([data-reduced-motion="true"]) {
+    scroll-behavior: smooth;
+}
+
+#features,
+#how-it-works,
+#weather,
+#insights,
+#console {
+    scroll-margin-top: 5rem;
+}
+
+/* Base state: Elements are fully visible unless JS adds data-reveal="pending" */
+[data-reveal="pending"] {
+    opacity: 0 !important;
+    transform: translateY(16px) !important;
+}
+
+[data-reveal="revealed"] {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity var(--motion-duration-entrance) var(--motion-ease-standard),
+                transform var(--motion-duration-entrance) var(--motion-ease-standard) !important;
+}
+
+[data-reduced-motion="true"] [data-reveal="revealed"] {
+    transform: none !important;
+    transition: opacity var(--motion-duration-small) linear;
+}
+
+/* Stagger targets */
+.motion-card-stagger[data-reveal="pending"] {
+    opacity: 0 !important;
+    transform: translateY(16px) !important;
+}
+
+[data-reveal="revealed"] .motion-card-stagger[data-reveal="pending"] {
+    opacity: 0 !important;
+    transform: translateY(16px) !important;
+}
+
+[data-reveal="revealed"] .motion-card-stagger[data-reveal="revealed"] {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity var(--motion-duration-standard) var(--motion-ease-standard),
+                transform var(--motion-duration-standard) var(--motion-ease-standard) !important;
+}
+
+[data-reduced-motion="true"] [data-reveal="revealed"] .motion-card-stagger {
+    transform: none !important;
+    transition: opacity var(--motion-duration-small) linear;
+}
+
+/* Fallback: if script hangs, elements fade in automatically after 2s */
+@keyframes safetyReveal {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+[data-reveal="pending"] {
+    animation: safetyReveal 0.1s forwards 2s;
+}
+
+
+/* ------------------------------------- */
+/* Stage 2: Logo Intro Sequence          */
+/* ------------------------------------- */
+
+/* 1. 0.0-0.3s: Soft radial glow in #1F8A4D fades in */
+.motion-intro-glow {
+    opacity: 0;
+    animation: introFadeIn 0.3s ease-out forwards;
+}
+
+/* 2. 0.3-0.8s: Orbit line draws, point travels */
+.motion-intro-orbit {
+    opacity: 0;
+    animation: introFadeIn 0.2s ease-out 0.3s forwards;
+}
+
+.motion-intro-orbit-path {
+    stroke-dasharray: 850;
+    stroke-dashoffset: 850;
+    animation: introOrbitDraw 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+.motion-intro-orbit-point {
+    offset-path: path('M 270,70 A 130,60 0 1,1 10,70 A 130,60 0 1,1 270,70');
+    offset-distance: 0%;
+    animation: introOrbitTravel 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+/* 3. 0.7-1.2s: Logo fades in with small scale (0.94 to 1) */
+.motion-intro-logo {
+    opacity: 0;
+    transform: scale(0.94);
+    animation: introLogoReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.7s forwards;
+}
+
+/* 4. 1.1-1.5s: Wordmark fades in with short upward move */
+.motion-intro-wordmark {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: introWordmarkReveal 0.4s cubic-bezier(0.4, 0, 0.2, 1) 1.1s forwards;
+}
+
+/* 5. 1.4-1.7s: Fine light sweep across logo */
+.motion-intro-sweep {
+    transform: translateX(-150%) skewX(-25deg);
+    opacity: 0;
+    animation: introSweep 0.3s linear 1.4s forwards;
+}
+
+@keyframes introFadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes introOrbitDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes introOrbitTravel {
+    to { offset-distance: 100%; }
+}
+
+@keyframes introLogoReveal {
+    to { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+}
+
+@keyframes introWordmarkReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes introSweep {
+    0% {
+        transform: translateX(-150%) skewX(-25deg);
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+        transform: translateX(150%) skewX(-25deg);
+        opacity: 0;
+    }
+}
+
+
+/* ------------------------------------- */
+/* Stage 3: Interaction Polish           */
+/* ------------------------------------- */
+
+/* 1. Buttons */
+button,
+a.rounded-full,
+a.rounded,
+a.rounded-lg {
+    transition: background-color var(--motion-duration-small) var(--motion-ease-standard),
+                border-color var(--motion-duration-small) var(--motion-ease-standard),
+                color var(--motion-duration-small) var(--motion-ease-standard),
+                transform var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+button:active,
+a.rounded-full:active,
+a.rounded:active {
+    transform: scale(0.98);
+}
+
+/* 2. Cards (zone cards, insight cards, HUD cards, table rows) */
+@media (hover: hover) and (pointer: fine) {
+    .bg-white\/\[0\.03\],
+    .bg-black\/40,
+    .bg-\[\#22C55E\]\/10,
+    .bg-\[\#EF4444\]\/10,
+    table tr {
+        transition: border-color var(--motion-duration-standard) var(--motion-ease-standard),
+                    box-shadow var(--motion-duration-standard) var(--motion-ease-standard),
+                    transform var(--motion-duration-standard) var(--motion-ease-standard);
+    }
+
+    .bg-white\/\[0\.03\]:hover,
+    .bg-black\/40:hover,
+    .bg-\[\#22C55E\]\/10:hover,
+    .bg-\[\#EF4444\]\/10:hover,
+    table tr:hover {
+        border-color: rgba(31, 138, 77, 0.4); /* #1F8A4D */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+    }
+}
+
+/* 3. Nav links, field pills, and field dropdown */
+nav a, .field-pill {
+    transition: color var(--motion-duration-small) var(--motion-ease-standard),
+                background-color var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+select#farm-selector {
+    transition: background-color var(--motion-duration-small) var(--motion-ease-standard),
+                border-color var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+/* 4. Watch demo modal */
+.motion-modal-backdrop {
+    animation: modalBackdropFadeIn var(--motion-duration-standard) var(--motion-ease-standard) forwards !important;
+}
+
+.motion-modal-content {
+    animation: modalContentFadeIn var(--motion-duration-standard) var(--motion-ease-standard) forwards !important;
+}
+
+.motion-modal-backdrop.exiting {
+    animation: modalBackdropFadeOut var(--motion-duration-small) var(--motion-ease-standard) forwards !important;
+}
+
+.motion-modal-content.exiting {
+    animation: modalContentFadeOut var(--motion-duration-small) var(--motion-ease-standard) forwards !important;
+}
+
+@keyframes modalBackdropFadeIn {
+    from { opacity: 0 !important; }
+    to { opacity: 1 !important; }
+}
+
+@keyframes modalBackdropFadeOut {
+    from { opacity: 1 !important; }
+    to { opacity: 0 !important; }
+}
+
+@keyframes modalContentFadeIn {
+    from { opacity: 0 !important; transform: scale(0.97) !important; }
+    to { opacity: 1 !important; transform: scale(1) !important; }
+}
+
+@keyframes modalContentFadeOut {
+    from { opacity: 1 !important; transform: scale(1) !important; }
+    to { opacity: 0 !important; transform: scale(0.97) !important; }
+}
+
+/* 5. Seven-day plan day rows - smooth expand/collapse */
+/* Using grid trick for height transition without JS height calculations */
+.motion-accordion-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--motion-duration-standard) var(--motion-ease-standard);
+    overflow: hidden;
+}
+
+.motion-accordion-wrapper.expanded {
+    grid-template-rows: 1fr;
+}
+
+.motion-accordion-inner {
+    min-height: 0;
+}
+
+/* 6. Weather day strip */
+.min-w-\[980px\] > div {
+    transition: background-color var(--motion-duration-small) var(--motion-ease-standard),
+                border-color var(--motion-duration-small) var(--motion-ease-standard),
+                transform var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+/* ------------------------------------- */
+/* Stage 4: Data-Driven Motion           */
+/* ------------------------------------- */
+
+/* 1. Map Polygons */
+path.leaflet-interactive {
+    transition: stroke var(--motion-duration-standard) var(--motion-ease-standard),
+                stroke-width var(--motion-duration-standard) var(--motion-ease-standard),
+                fill-opacity var(--motion-duration-standard) var(--motion-ease-standard),
+                stroke-opacity var(--motion-duration-standard) var(--motion-ease-standard);
+}
+
+/* Field Info Panel Fade */
+.motion-field-info {
+    transition: opacity var(--motion-duration-standard) var(--motion-ease-standard);
+}
+.motion-field-info.fading {
+    opacity: 0.5;
+}
+
+/* 2. Micro-weather */
+.motion-weather-detail {
+    transition: opacity var(--motion-duration-standard) var(--motion-ease-standard);
+}
+.motion-weather-detail.fading {
+    opacity: 0;
+}
+
+/* 3. Yield chart fade */
+.motion-chart-fade {
+    animation: chartFadeIn 600ms var(--motion-ease-standard) forwards;
+}
+.motion-chart-fade.fading {
+    opacity: 0.5;
+    transition: opacity var(--motion-duration-standard) var(--motion-ease-standard);
+}
+@keyframes chartFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.motion-kpi-fade {
+    animation: chartFadeIn 300ms var(--motion-ease-standard) forwards;
+}
+
+/* 4. Loading States */
+.motion-shimmer {
+    background: linear-gradient(90deg, rgba(31, 138, 77, 0.05) 25%, rgba(31, 138, 77, 0.15) 50%, rgba(31, 138, 77, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    color: transparent !important;
+    border-radius: 8px;
+    min-height: 24px;
+    display: inline-block;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 5. Cross-field table active row highlight */
+tr.motion-row-active {
+    background-color: rgba(31, 138, 77, 0.1) !important; /* #1F8A4D */
+    border-left: 2px solid #1F8A4D;
+}
+tr {
+    transition: background-color var(--motion-duration-standard) var(--motion-ease-standard),
+                border-left var(--motion-duration-standard) var(--motion-ease-standard);
+    border-left: 2px solid transparent;
+}
+
+/* 6. Seven-day plan tick feedback */
+.motion-tick-feedback {
+    animation: tickFeedback 400ms var(--motion-ease-standard) forwards;
+}
+@keyframes tickFeedback {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(31, 138, 77, 0); }
+    50% { transform: scale(1.2); box-shadow: 0 0 10px rgba(31, 138, 77, 0.8); background-color: #1F8A4D; }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(31, 138, 77, 0); }
+}
+
+/* 7. General fade for field-dependent sections */
+.motion-section-fade {
+    transition: opacity var(--motion-duration-standard) var(--motion-ease-standard);
+}
+.motion-section-fade.fading {
+    opacity: 0.5;
+}
